@@ -4,7 +4,6 @@ our $VERSION = '0.01';
 package Geo::GoogleMaps::OffsetCenter;
 # ABSTRACT: Offset a Lat/Long to account for an occlusion over your map area
 
-use Math::Trig qw/ deg2rad rad2deg pi /;
 use Params::Validate;
 use Regexp::Common;
 use Exporter::Easy (
