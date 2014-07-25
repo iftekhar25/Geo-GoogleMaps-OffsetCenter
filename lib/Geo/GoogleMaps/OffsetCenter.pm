@@ -81,7 +81,7 @@ Geo::GoogleMaps::OffsetCenter - Offset a Lat/Long to account for an occlusion ov
 
 =head1 VERSION
 
- version 0.001
+ version 0.01
 
 =head1 SYNOPSIS
 
