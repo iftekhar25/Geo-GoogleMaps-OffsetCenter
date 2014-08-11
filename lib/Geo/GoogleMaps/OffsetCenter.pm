@@ -5,6 +5,7 @@ package Geo::GoogleMaps::OffsetCenter;
 # ABSTRACT: Offset a Lat/Long to account for an occlusion over your map area
 
 use Params::Validate;
+use Math::Trig qw/ pi /;
 use Regexp::Common;
 use Exporter::Easy (
     OK => [ qw/ offset_google_maps_center / ],
