@@ -181,17 +181,6 @@ only, i.e., from the west, heading east
 
 =back
 
-=head1 AUTHOR
-
-Iftekharul Haque <iftekhar@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2014 by Iftekharul Haque.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =head1 ACKNOWLEDGEMENT
 
 This module was originally developed for use at Booking.com, and was
