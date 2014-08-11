@@ -13,7 +13,7 @@ use Exporter::Easy (
 
 use constant RADIUS_OF_EARTH => 6_378_100;
 
-sub offset_google_maps_center {
+sub offset_center_by_occlusion {
     validate_pos(
         @_,
         { regex => qr/$RE{num}{real}/, optional => 0 }, # latitude
