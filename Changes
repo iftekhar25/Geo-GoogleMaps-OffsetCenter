@@ -1,5 +1,7 @@
-Revision history for {{$dist_name}}
-
-{{$NEXT}}
+Revision history for Geo::GoogleMaps::OffsetCenter
 
 0.01      2014-07-25 17:36:36CEST+0200 Europe/Amsterdam
+
+Initial Release
+
+
