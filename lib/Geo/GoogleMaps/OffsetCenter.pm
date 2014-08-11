@@ -8,7 +8,7 @@ use Params::Validate;
 use Math::Trig qw/ pi /;
 use Regexp::Common;
 use Exporter::Easy (
-    OK => [ qw/ offset_google_maps_center / ],
+    OK => [ qw/ offset_center_by_occlusion offset_center_by_pixel / ],
 );
 
 use constant RADIUS_OF_EARTH => 6_378_100;
@@ -55,6 +55,79 @@ sub offset_center_by_occlusion {
     };
 }
 
+sub offset_center_by_pixel {
+    validate_pos(
+        @_,
+        { regex => qr/$RE{num}{real}/, optional => 0 }, # latitude
+        { regex => qr/$RE{num}{real}/, optional => 0 }, # longitude
+        { regex => qr/$RE{num}{int}/,  optional => 0 }, # width of the whole image
+        { regex => qr/$RE{num}{int}/,  optional => 0 }, # height of the whole image
+        { regex => qr/$RE{num}{int}/,  optional => 0 }, # x coordinate of where it should be; x_final
+        { regex => qr/$RE{num}{int}/,  optional => 0 }, # y coordinate of where it should be; y_final
+        { regex => qr/$RE{num}{int}/,  optional => 0 }, # zoom level
+    );
+
+    my(
+        $latitude_geo_entity,
+        $longitude_geo_entity,
+        $width_total,
+        $height_total,
+        $x_final,
+        $y_final,
+        $zoom_level,
+    ) = @_;
+
+    # important for both vertical and horizontal offset
+    my $number_of_pixels = 256 * 2**$zoom_level;
+    my $x_initial = int( $width_total / 2 );
+    my $y_initial = int( $height_total / 2 );
+
+    # important for vertical offset
+    my $meters_per_pixel_vertical  = ( pi * RADIUS_OF_EARTH ) / $number_of_pixels; # pi * r = length of longitude
+    my $meters_per_degree_vertical = ( pi * RADIUS_OF_EARTH ) / 180;
+
+    # important for horizontal offset
+    my $meters_per_pixel_horizontal  = ( 2 * pi * RADIUS_OF_EARTH ) / $number_of_pixels;
+    my $meters_per_degree_horizontal = ( 2 * pi * RADIUS_OF_EARTH ) / 360;
+
+    #####################
+    # horizontal offset #
+    #####################
+
+    my $horizontal_offset_in_degrees;
+    {
+        my $pixels_offset = -1 * ($x_final - $x_initial);
+
+        # find the number of meters we need to move
+        my $meters_offset = $pixels_offset * $meters_per_pixel_horizontal;
+
+        # now find the number of degrees we need to move
+        $horizontal_offset_in_degrees = $meters_offset / $meters_per_degree_horizontal;
+    }
+
+    ###################
+    # vertical offset #
+    ###################
+
+    my $vertical_offset_in_degrees;
+    {
+        my $pixels_offset = -1 * ($y_final - $y_initial);
+
+        # find the number of meters we need to move
+        my $meters_offset = $pixels_offset * $meters_per_pixel_vertical;
+
+        # now find the number of degrees we need to move
+        $vertical_offset_in_degrees = $meters_offset / $meters_per_degree_vertical;
+    }
+
+    $latitude_geo_entity  += $vertical_offset_in_degrees;
+    $longitude_geo_entity += $horizontal_offset_in_degrees;
+
+    return {
+        latitude  => $latitude_geo_entity,
+        longitude => $longitude_geo_entity
+    };
+}
 
 sub _get_pixels_offset {
     my( $width_total, $height_total, $width_occlusion_from_left ) = @_;
