@@ -1,7 +1,26 @@
+=head1 NAME
+
+Changes - public release history for Data::Dumper
+
+=head1 DESCRIPTION
+
 Revision history for Geo::GoogleMaps::OffsetCenter
 
-0.01      2014-07-25 17:36:36CEST+0200 Europe/Amsterdam
+=over 8
+
+=item 0.02
+
+Rename function from offset_google_maps_center to offset_center_by_occlusion
+
+Add new function offset_centery_by_pixel
+
+POD fixups in accordance with dzil
+
+=item 0.01
 
 Initial Release
 
+=back
+
+=cut
 
