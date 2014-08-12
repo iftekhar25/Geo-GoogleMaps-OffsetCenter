@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 package Geo::GoogleMaps::OffsetCenter;
 # ABSTRACT: Offset a Lat/Long in Google Maps
 
@@ -14,11 +14,11 @@ Geo::GoogleMaps::OffsetCenter - Offset a Lat/Long to account for an occlusion ov
 
 =head1 VERSION
 
- version 0.01
+ version 0.02
 
 =head1 SYNOPSIS
 
- use Geo::GoogleMaps::OffsetCenter qw/ offset_center_by_occlusion /;
+ use Geo::GoogleMaps::OffsetCenter qw/ offset_center_by_occlusion offset_center_by_pixel /;
 
  my $new_lat_long = offset_center_by_occlusion(
     52.3728, # latitude
@@ -100,36 +100,35 @@ use constant RADIUS_OF_EARTH => 6_378_100;
 
 =over 8
 
-=item 1. latitude_geo_entity
+=item 1. Latitude
 
 A valid latitude, basically a floating point number.
 
-=item 2. longitude_geo_entity
+=item 2. Longitude
 
 A valid longitude, same as above.
 
-=item 3. width_total
+=item 3. Total Width of the Map Area
 
 The total width of the map you want rendered. This includes the occluded area,
 although it is partially or wholly occluded, you will need a rendering of a map
 in this area.
 
-=item 4. height_total
+=item 4. Total Height of the Map Area
 
 Height is currently ignored, height offset has not been integrated here.
 
-=item 5. zoom_level
+=item 6. Google Maps Zoom Level
 
 A Google Maps zoom-level, basicaly 0 .. 21.
 
 See L<Google Maps Documentation|https://developers.google.com/maps/documentation/staticmaps/#Zoomlevels>.
 
-=item 6. width_occlusion_from_left
+=item 6. Pixels of Occlusion from the Left
 
 The occluded area must be specified as left-bound, which means the offset is
 always towards the right. This is a known limitation. This should always be
-less than the total area of the maps displayed. Otherwise you're just being
-silly.
+less than the total area of the maps displayed.
 
 =back
 
@@ -225,7 +224,7 @@ rendered on the image.
 
 Same as above, except the y coordinate on the image.
 
-=item 7. zoom_level
+=item 7. Google Maps Zoom Level
 
 A Google Maps zoom-level, basically 0 .. 21.
 
