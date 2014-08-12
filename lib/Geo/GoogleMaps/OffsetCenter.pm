@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 package Geo::GoogleMaps::OffsetCenter;
 # ABSTRACT: Offset a Lat/Long in Google Maps
 
@@ -14,7 +14,7 @@ Geo::GoogleMaps::OffsetCenter - Offset a Lat/Long to account for an occlusion ov
 
 =head1 VERSION
 
- version 0.02
+ version 0.03
 
 =head1 SYNOPSIS
 

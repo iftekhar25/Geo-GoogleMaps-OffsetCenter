@@ -8,6 +8,10 @@ Revision history for Geo::GoogleMaps::OffsetCenter
 
 =over 8
 
+=item 0.03
+
+Documentation fixup
+
 =item 0.02
 
 Rename function from offset_google_maps_center to offset_center_by_occlusion
