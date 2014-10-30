@@ -212,8 +212,8 @@ sub offset_center_by_pixel {
     $longitude_geo_entity += $horizontal_offset_in_degrees;
 
     return {
-        latitude  => $latitude_geo_entity,
-        longitude => $longitude_geo_entity
+        latitude  => sprintf( '%.6f', $latitude_geo_entity ),
+        longitude => sprintf( '%.6f', $longitude_geo_entity ),
     };
 }
 
