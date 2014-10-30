@@ -8,6 +8,18 @@ Revision history for Geo::GoogleMaps::OffsetCenter
 
 =over 8
 
+=item 0.04
+
+Added a precision-limit to latitude/longitude result
+
+Added some basic test code
+
+Removed references to the old method of calculating the offset. In future,
+occlusions can be handled by calling the main function with modified
+parameters.
+
+Some documentation cleanup
+
 =item 0.03
 
 Documentation fixup
