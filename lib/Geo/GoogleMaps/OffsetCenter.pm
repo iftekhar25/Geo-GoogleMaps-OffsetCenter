@@ -18,16 +18,7 @@ Geo::GoogleMaps::OffsetCenter - Offset a Lat/Long to account for an occlusion ov
 
 =head1 SYNOPSIS
 
- use Geo::GoogleMaps::OffsetCenter qw/ offset_center_by_occlusion offset_center_by_pixel /;
-
- my $new_lat_long = offset_center_by_occlusion(
-    52.3728, # latitude
-    4.8930,  # longitude
-    800,     # width
-    400,     # height
-    16,      # Google Maps zoom level
-    200      # left-bound width of the occlusion
- );
+ use Geo::GoogleMaps::OffsetCenter qw/ offset_center_by_pixel /;
 
  my $new_lat_long = offset_center_by_pixel(
     52.3728, # latitude
@@ -87,96 +78,12 @@ use Params::Validate;
 use Math::Trig qw/ pi /;
 use Regexp::Common;
 use Exporter::Easy (
-    OK => [ qw/ offset_center_by_occlusion offset_center_by_pixel / ],
+    OK => [ qw/ offset_center_by_pixel / ],
 );
 
 use constant RADIUS_OF_EARTH => 6_378_100;
 
 =head1 METHODS
-
-=over 4
-
-=item I<offset_center_by_occlusion>
-
-=over 8
-
-=item 1. Latitude
-
-A valid latitude, basically a floating point number.
-
-=item 2. Longitude
-
-A valid longitude, same as above.
-
-=item 3. Total Width of the Map Area
-
-The total width of the map you want rendered. This includes the occluded area,
-although it is partially or wholly occluded, you will need a rendering of a map
-in this area.
-
-=item 4. Total Height of the Map Area
-
-Height is currently ignored, height offset has not been integrated here.
-
-=item 6. Google Maps Zoom Level
-
-A Google Maps zoom-level, basicaly 0 .. 21.
-
-See L<Google Maps Documentation|https://developers.google.com/maps/documentation/staticmaps/#Zoomlevels>.
-
-=item 6. Pixels of Occlusion from the Left
-
-The occluded area must be specified as left-bound, which means the offset is
-always towards the right. This is a known limitation. This should always be
-less than the total area of the maps displayed.
-
-=back
-
-=back
-
-=cut
-
-sub offset_center_by_occlusion {
-    validate_pos(
-        @_,
-        { regex => qr/$RE{num}{real}/, optional => 0 }, # latitude
-        { regex => qr/$RE{num}{real}/, optional => 0 }, # longitude
-        { regex => qr/$RE{num}{int}/,  optional => 0 }, # width
-        { regex => qr/$RE{num}{int}/,  optional => 0 }, # height
-        { regex => qr/$RE{num}{int}/,  optional => 0 }, # zoom level
-        { regex => qr/$RE{num}{int}/,  optional => 0 }, # occlusion
-    );
-
-    my(
-        $latitude_geo_entity,
-        $longitude_geo_entity,
-        $width_total,
-        $height_total,
-        $zoom_level,
-        $width_occlusion_from_left
-    ) = @_;
-
-    # we will need these
-    my $number_of_pixels  = 256 * 2**$zoom_level;
-    my $meters_per_pixel  = ( 2 * pi * RADIUS_OF_EARTH ) / $number_of_pixels;
-    my $meters_per_degree = ( 2 * pi * RADIUS_OF_EARTH ) / 360;
-
-    # find the number of pixels we need to move the center
-    my $pixels_offset = _get_pixels_offset( $width_total, $height_total, $width_occlusion_from_left );
-
-    # find the number of meters we need to move
-    my $meters_offset = $pixels_offset * $meters_per_pixel;
-
-    # now find the number of degrees we need to move
-    my $degrees_offset = $meters_offset / $meters_per_degree;
-
-    $longitude_geo_entity -= $degrees_offset;
-
-    return {
-        latitude  => $latitude_geo_entity,
-        longitude => $longitude_geo_entity
-    };
-}
 
 =over 4
 
@@ -310,38 +217,9 @@ sub offset_center_by_pixel {
     };
 }
 
-sub _get_pixels_offset {
-    my( $width_total, $height_total, $width_occlusion_from_left ) = @_;
-
-    # actually we don't care about the height, heh.
-
-    my $current_center = int( $width_total / 2 );
-    my $center_of_effective_area = int( $width_total - $width_occlusion_from_left ) / 2;
-
-    return abs( $current_center - $center_of_effective_area );
-}
-
 1;
 
 __END__
-
-
-=head1 LIMITATIONS
-
-=over 4
-
-=item *
-
-Currently, for C<offset_center_by_occlusion>, there is no vertical offset. So
-your lat/long can be transformed along an East-West axis only with this
-function. If you need an East-West and a North-South transform, see
-C<offset_center_by_pixel>.
-
-=item *
-
-For C<offset_center_by_occlusion>, it is always assumed to be left-bound.
-
-=back
 
 =head1 ACKNOWLEDGEMENT
 
